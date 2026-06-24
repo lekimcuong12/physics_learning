@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Play, Pause, RotateCcw, Cpu } from "lucide-react";
+import { InlineMath } from "../SafeMath";
 
 export default function RobotGrid() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -141,10 +142,10 @@ export default function RobotGrid() {
         {/* HUD Overlay */}
         <div className="canvas-hud">
           <div className="hud-pill" style={{ borderColor: "var(--status-warning)", color: "var(--status-warning)" }}>
-            Path Distance (s): {distance.toFixed(1)} units
+            Path Distance (<InlineMath math="s" />): {distance.toFixed(1)} units
           </div>
           <div className="hud-pill" style={{ borderColor: "var(--status-success)", color: "var(--status-success)" }}>
-            Displacement (d): {displacement.toFixed(1)} units
+            Displacement (<InlineMath math={"\\vec{d}"} />): {displacement.toFixed(1)} units
           </div>
         </div>
 
@@ -202,16 +203,24 @@ export default function RobotGrid() {
                 markerEnd="url(#grid-robot-arrow)"
                 style={{ filter: "drop-shadow(0 0 4px var(--status-success-border))" }}
               />
-              <text 
-                x={(originX + robotSvgX) / 2 + 10} 
-                y={(originY + robotSvgY) / 2 + 5} 
-                fill="var(--status-success)" 
-                fontSize="11" 
-                fontFamily="var(--font-mono)" 
-                fontWeight="bold"
-              >
-                d
-              </text>
+              <g>
+                <text 
+                  x={(originX + robotSvgX) / 2 + 10} 
+                  y={(originY + robotSvgY) / 2 + 5} 
+                  fill="var(--status-success)" 
+                  fontSize="11" 
+                  fontFamily="var(--font-mono)" 
+                  fontWeight="bold"
+                >
+                  d
+                </text>
+                <path 
+                  d={`M ${(originX + robotSvgX) / 2 + 10.5} ${(originY + robotSvgY) / 2 - 7} L ${(originX + robotSvgX) / 2 + 16.5} ${(originY + robotSvgY) / 2 - 7} M ${(originX + robotSvgX) / 2 + 14.5} ${(originY + robotSvgY) / 2 - 8.5} L ${(originX + robotSvgX) / 2 + 16.5} ${(originY + robotSvgY) / 2 - 7} L ${(originX + robotSvgX) / 2 + 14.5} ${(originY + robotSvgY) / 2 - 5.5}`}
+                  fill="none"
+                  stroke="var(--status-success)"
+                  strokeWidth="1.2"
+                />
+              </g>
             </g>
           )}
 
@@ -266,17 +275,21 @@ export default function RobotGrid() {
       </div>
 
       {/* Coordinates status banner */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "10px", fontSize: "0.85rem", fontFamily: "var(--font-mono)", textAlign: "left" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "10px", fontFamily: "var(--font-mono)", textAlign: "left" }}>
         <div style={{ padding: "8px 12px", backgroundColor: "var(--bg-input)", borderRadius: "8px", border: "1px solid var(--border-color)" }}>
-          <div style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>Robot Position:</div>
-          <div style={{ fontWeight: "bold", color: "var(--accent-purple)" }}>
+          <div style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>
+            Robot Position (<InlineMath math="(x, y)" />):
+          </div>
+          <div style={{ fontWeight: "bold", color: "var(--accent-purple)", fontSize: "1.05rem" }}>
             ({robotGridX.toFixed(1)}, {robotGridY.toFixed(1)})
           </div>
         </div>
         <div style={{ padding: "8px 12px", backgroundColor: "var(--bg-input)", borderRadius: "8px", border: "1px solid var(--border-color)" }}>
-          <div style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>Pythagorean Theorem:</div>
-          <div style={{ fontWeight: "bold", color: "var(--status-success)" }}>
-            d = &radic;({robotGridX.toFixed(1)}&sup2; + {robotGridY.toFixed(1)}&sup2;)
+          <div style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>
+            Pythagorean Theorem:
+          </div>
+          <div style={{ fontWeight: "bold", color: "var(--status-success)", fontSize: "0.85rem", marginTop: "4px" }}>
+            <InlineMath math={`d = \\sqrt{x^2 + y^2} = \\sqrt{${robotGridX.toFixed(1)}^2 + ${robotGridY.toFixed(1)}^2}`} />
           </div>
         </div>
       </div>

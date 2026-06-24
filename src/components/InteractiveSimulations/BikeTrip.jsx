@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Bike, Play, Pause, RotateCcw, Landmark } from "lucide-react";
+import { Bike, Play, Pause, RotateCcw } from "lucide-react";
+import { InlineMath } from "../SafeMath";
 
 export default function BikeTrip() {
   const [phase, setPhase] = useState(1); // 1: Home to School, 2: School to Bookstore
@@ -148,10 +149,10 @@ export default function BikeTrip() {
         {/* HUD Details */}
         <div className="canvas-hud">
           <div className="hud-pill" style={{ borderColor: "var(--status-error)", color: "var(--status-error)" }}>
-            Distance (s): {distance.toFixed(1)} km
+            Distance (<InlineMath math="s" />): {distance.toFixed(1)} km
           </div>
           <div className="hud-pill" style={{ borderColor: "var(--accent-cyan)", color: "var(--accent-cyan)" }}>
-            Displacement (d): {displacement.toFixed(1)} km
+            Displacement (<InlineMath math={"\\vec{d}"} />): {displacement.toFixed(1)} km
           </div>
         </div>
 
@@ -207,17 +208,25 @@ export default function BikeTrip() {
                 markerEnd="url(#bike-vector-arrow)"
                 style={{ filter: "drop-shadow(0 0 4px var(--accent-cyan-glow))" }}
               />
-              <text 
-                x={(startX + bikeSvgX) / 2} 
-                y={roadY + 30} 
-                fill="var(--accent-cyan)" 
-                fontSize="11" 
-                fontFamily="var(--font-mono)" 
-                fontWeight="bold"
-                textAnchor="middle"
-              >
-                d
-              </text>
+              <g>
+                <text 
+                  x={(startX + bikeSvgX) / 2} 
+                  y={roadY + 30} 
+                  fill="var(--accent-cyan)" 
+                  fontSize="11" 
+                  fontFamily="var(--font-mono)" 
+                  fontWeight="bold"
+                  textAnchor="middle"
+                >
+                  d
+                </text>
+                <path 
+                  d={`M ${(startX + bikeSvgX) / 2 - 3.5} ${roadY + 18} L ${(startX + bikeSvgX) / 2 + 3.5} ${roadY + 18} M ${(startX + bikeSvgX) / 2 + 1.5} ${roadY + 16.5} L ${(startX + bikeSvgX) / 2 + 3.5} ${roadY + 18} L ${(startX + bikeSvgX) / 2 + 1.5} ${roadY + 19.5}`}
+                  fill="none"
+                  stroke="var(--accent-cyan)"
+                  strokeWidth="1.2"
+                />
+              </g>
             </g>
           )}
 
@@ -282,21 +291,25 @@ export default function BikeTrip() {
       {/* Comparison metrics table */}
       <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "10px", fontSize: "0.85rem", fontFamily: "var(--font-mono)", textAlign: "left" }}>
         <div style={{ padding: "8px 12px", backgroundColor: "var(--bg-input)", borderRadius: "8px", border: "1px solid var(--border-color)" }}>
-          <div style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>Distance (s) [Path length]:</div>
+          <div style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>
+            Distance (<InlineMath math="s" />) [Path length]:
+          </div>
           <div style={{ fontWeight: "bold", color: "var(--status-error)" }}>
             {distance.toFixed(1)} km
           </div>
           <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: "2px" }}>
-            Always accumulates (s1 + s2).
+            Always accumulates (<InlineMath math="s_1 + s_2" />).
           </div>
         </div>
         <div style={{ padding: "8px 12px", backgroundColor: "var(--bg-input)", borderRadius: "8px", border: "1px solid var(--border-color)" }}>
-          <div style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>Displacement (d) [Vector]:</div>
+          <div style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>
+            Displacement (<InlineMath math={"\\vec{d}"} />) [Vector]:
+          </div>
           <div style={{ fontWeight: "bold", color: "var(--accent-cyan)" }}>
             {displacement.toFixed(1)} km
           </div>
           <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: "2px" }}>
-            Net change relative to O(0km).
+            Net change relative to <InlineMath math="O(0\text{ km})" />.
           </div>
         </div>
       </div>

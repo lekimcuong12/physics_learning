@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MoveRight, Play, Pause, RotateCcw } from "lucide-react";
+import { InlineMath } from "../SafeMath";
 
 export default function VelocitySim() {
   const [angle, setAngle] = useState(0); // Angle in degrees from 0 to 720 (2 laps)
@@ -159,10 +160,10 @@ export default function VelocitySim() {
         {/* HUD Stats */}
         <div className="canvas-hud">
           <div className="hud-pill" style={{ borderColor: "var(--status-error)", color: "var(--status-error)" }}>
-            Distance (s): {distance.toFixed(1)} m
+            Distance (<InlineMath math="s" />): {distance.toFixed(1)} m
           </div>
           <div className="hud-pill" style={{ borderColor: "var(--accent-cyan)", color: "var(--accent-cyan)" }}>
-            Displacement (d): {displacement.toFixed(1)} m
+            Displacement (<InlineMath math={"\\vec{d}"} />): {displacement.toFixed(1)} m
           </div>
         </div>
 
@@ -217,16 +218,24 @@ export default function VelocitySim() {
                 markerEnd="url(#arrow)"
                 style={{ filter: "drop-shadow(0 0 4px var(--accent-cyan-glow))" }}
               />
-              <text 
-                x={(startX + x) / 2 + 10} 
-                y={(startY + y) / 2 + 5} 
-                fill="var(--accent-cyan)" 
-                fontSize="10" 
-                fontFamily="var(--font-mono)" 
-                fontWeight="bold"
-              >
-                d
-              </text>
+              <g>
+                <text 
+                  x={(startX + x) / 2 + 10} 
+                  y={(startY + y) / 2 + 5} 
+                  fill="var(--accent-cyan)" 
+                  fontSize="10" 
+                  fontFamily="var(--font-mono)" 
+                  fontWeight="bold"
+                >
+                  d
+                </text>
+                <path 
+                  d={`M ${(startX + x) / 2 + 10.5} ${(startY + y) / 2 - 6} L ${(startX + x) / 2 + 16.5} ${(startY + y) / 2 - 6} M ${(startX + x) / 2 + 14.5} ${(startY + y) / 2 - 7.5} L ${(startX + x) / 2 + 16.5} ${(startY + y) / 2 - 6} L ${(startX + x) / 2 + 14.5} ${(startY + y) / 2 - 4.5}`}
+                  fill="none"
+                  stroke="var(--accent-cyan)"
+                  strokeWidth="1.2"
+                />
+              </g>
             </g>
           )}
 
@@ -268,7 +277,9 @@ export default function VelocitySim() {
       {/* Physics Readouts */}
       <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "10px", fontSize: "0.85rem", fontFamily: "var(--font-mono)", textAlign: "left" }}>
         <div style={{ padding: "10px", backgroundColor: "var(--bg-input)", borderRadius: "8px", border: "1px solid var(--border-color)" }}>
-          <div style={{ color: "var(--text-muted)", marginBottom: "4px" }}>Distance (s) [Scalar]:</div>
+          <div style={{ color: "var(--text-muted)", marginBottom: "4px" }}>
+            Distance (<InlineMath math="s" />) [Scalar]:
+          </div>
           <div style={{ fontWeight: "bold", color: "var(--status-error)", fontSize: "1.05rem" }}>
             {distance.toFixed(1)} m
           </div>
@@ -277,7 +288,9 @@ export default function VelocitySim() {
           </div>
         </div>
         <div style={{ padding: "10px", backgroundColor: "var(--bg-input)", borderRadius: "8px", border: "1px solid var(--border-color)" }}>
-          <div style={{ color: "var(--text-muted)", marginBottom: "4px" }}>Displacement (d) [Vector]:</div>
+          <div style={{ color: "var(--text-muted)", marginBottom: "4px" }}>
+            Displacement (<InlineMath math={"\\vec{d}"} />) [Vector]:
+          </div>
           <div style={{ fontWeight: "bold", color: "var(--accent-cyan)", fontSize: "1.05rem" }}>
             {displacement.toFixed(1)} m
           </div>

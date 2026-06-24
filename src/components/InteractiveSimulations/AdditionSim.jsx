@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Compass, Play, Pause, RotateCcw, Anchor } from "lucide-react";
+import { Play, Pause, RotateCcw, Anchor } from "lucide-react";
+import { InlineMath, BlockMath } from "../SafeMath";
 
 export default function AdditionSim() {
   const [mode, setMode] = useState("crossing"); // "downstream", "upstream", "crossing"
@@ -145,13 +146,13 @@ export default function AdditionSim() {
         {/* HUD Info */}
         <div className="canvas-hud">
           <div className="hud-pill" style={{ borderColor: "var(--accent-purple)" }}>
-            Boat (v1,2): {boatSpeed.toFixed(1)} m/s
+            Boat (<InlineMath math={"\\vec{v}_{1,2}"} />): {boatSpeed.toFixed(1)} m/s
           </div>
           <div className="hud-pill" style={{ borderColor: "var(--accent-cyan)" }}>
-            River (v2,3): {riverSpeed.toFixed(1)} m/s
+            River (<InlineMath math={"\\vec{v}_{2,3}"} />): {riverSpeed.toFixed(1)} m/s
           </div>
           <div className="hud-pill" style={{ borderColor: "var(--status-success)" }}>
-            Result (v1,3): {vResultant.toFixed(1)} m/s
+            Result (<InlineMath math={"\\vec{v}_{1,3}"} />): {vResultant.toFixed(1)} m/s
           </div>
         </div>
 
@@ -195,14 +196,34 @@ export default function AdditionSim() {
                 x1="250" y1="130" x2="250" y2={130 - boatSpeed * 12} 
                 stroke="var(--accent-purple)" strokeWidth="3" markerEnd="url(#arrow-purple)" 
               />
-              <text x="238" y={135 - boatSpeed * 6} fill="var(--accent-purple)" fontSize="9" fontFamily="var(--font-mono)">v1,2</text>
+              <g>
+                <text x="238" y={135 - boatSpeed * 6} fill="var(--accent-purple)" fontSize="9" fontFamily="var(--font-mono)">
+                  v<tspan baselineShift="sub" fontSize="6">1,2</tspan>
+                </text>
+                <path 
+                  d={`M 238.5 ${135 - boatSpeed * 6 - 9.5} L 244 ${135 - boatSpeed * 6 - 9.5} M 242 ${135 - boatSpeed * 6 - 11} L 244 ${135 - boatSpeed * 6 - 9.5} L 242 ${135 - boatSpeed * 6 - 8}`}
+                  fill="none"
+                  stroke="var(--accent-purple)"
+                  strokeWidth="1"
+                />
+              </g>
 
               {/* River relative vector v2,3 (Cyan pointing RIGHT, head-to-tail at end of purple) */}
               <line 
                 x1="250" y1={130 - boatSpeed * 12} x2={250 + riverSpeed * 12} y2={130 - boatSpeed * 12} 
                 stroke="var(--accent-cyan)" strokeWidth="3" markerEnd="url(#arrow-cyan)" 
               />
-              <text x={252 + riverSpeed * 6} y={124 - boatSpeed * 12} fill="var(--accent-cyan)" fontSize="9" fontFamily="var(--font-mono)">v2,3</text>
+              <g>
+                <text x={252 + riverSpeed * 6} y={124 - boatSpeed * 12} fill="var(--accent-cyan)" fontSize="9" fontFamily="var(--font-mono)">
+                  v<tspan baselineShift="sub" fontSize="6">2,3</tspan>
+                </text>
+                <path 
+                  d={`M ${252.5 + riverSpeed * 6} ${124 - boatSpeed * 12 - 9.5} L ${258 + riverSpeed * 6} ${124 - boatSpeed * 12 - 9.5} M ${256 + riverSpeed * 6} ${124 - boatSpeed * 12 - 11} L ${258 + riverSpeed * 6} ${124 - boatSpeed * 12 - 9.5} L ${256 + riverSpeed * 6} ${124 - boatSpeed * 12 - 8}`}
+                  fill="none"
+                  stroke="var(--accent-cyan)"
+                  strokeWidth="1"
+                />
+              </g>
 
               {/* Combined Vector v1,3 (Green diagonal) */}
               <line 
@@ -210,12 +231,20 @@ export default function AdditionSim() {
                 stroke="var(--status-success)" strokeWidth="3.5" markerEnd="url(#arrow-success)"
                 strokeDasharray="2, 2"
               />
-              <text 
-                x={260 + riverSpeed * 4} y={142 - boatSpeed * 6} 
-                fill="var(--status-success)" fontSize="10" fontWeight="bold" fontFamily="var(--font-mono)"
-              >
-                v1,3
-              </text>
+              <g>
+                <text 
+                  x={260 + riverSpeed * 4} y={142 - boatSpeed * 6} 
+                  fill="var(--status-success)" fontSize="10" fontWeight="bold" fontFamily="var(--font-mono)"
+                >
+                  v<tspan baselineShift="sub" fontSize="6.5">1,3</tspan>
+                </text>
+                <path 
+                  d={`M ${260.5 + riverSpeed * 4} ${142 - boatSpeed * 6 - 10.5} L ${266.5 + riverSpeed * 4} ${142 - boatSpeed * 6 - 10.5} M ${264.5 + riverSpeed * 4} ${142 - boatSpeed * 6 - 12} L ${266.5 + riverSpeed * 4} ${142 - boatSpeed * 6 - 10.5} L ${264.5 + riverSpeed * 4} ${142 - boatSpeed * 6 - 9}`}
+                  fill="none"
+                  stroke="var(--status-success)"
+                  strokeWidth="1.2"
+                />
+              </g>
             </g>
           )}
 
@@ -241,7 +270,20 @@ export default function AdditionSim() {
                 x2={mode === "downstream" ? 200 + (boatSpeed + riverSpeed) * 12 : 200 - (boatSpeed - riverSpeed) * 12} y2="148" 
                 stroke="var(--status-success)" strokeWidth="3" markerEnd="url(#arrow-success)" 
               />
-              <text x="200" y="158" fill="var(--status-success)" fontSize="8" fontFamily="var(--font-mono)">Resultant v1,3</text>
+                <g>
+                  <text x="200" y="158" fill="var(--status-success)" fontSize="8" fontFamily="var(--font-mono)">
+                    Resultant
+                  </text>
+                  <text x="248" y="158" fill="var(--status-success)" fontSize="8" fontFamily="var(--font-mono)">
+                    v<tspan baselineShift="sub" fontSize="5.5">1,3</tspan>
+                  </text>
+                  <path 
+                    d="M 248.5 149.5 L 253.5 149.5 M 252 148 L 253.5 149.5 L 252 151"
+                    fill="none"
+                    stroke="var(--status-success)"
+                    strokeWidth="0.8"
+                  />
+                </g>
             </g>
           )}
 
@@ -303,7 +345,9 @@ export default function AdditionSim() {
           <div className="boat-controls-grid">
             <div className="slider-control-group">
               <div className="control-label-row">
-                <span style={{ color: "var(--accent-purple)", fontSize: "0.75rem" }}>Boat Speed (v1,2)</span>
+                <span style={{ color: "var(--accent-purple)", fontSize: "0.75rem" }}>
+                  Boat Speed (<InlineMath math={"\\vec{v}_{1,2}"} />)
+                </span>
                 <span className="label-val" style={{ color: "var(--accent-purple)", fontSize: "0.75rem" }}>{boatSpeed.toFixed(1)} m/s</span>
               </div>
               <input 
@@ -322,7 +366,9 @@ export default function AdditionSim() {
 
             <div className="slider-control-group">
               <div className="control-label-row">
-                <span style={{ color: "var(--accent-cyan)", fontSize: "0.75rem" }}>River Current (v2,3)</span>
+                <span style={{ color: "var(--accent-cyan)", fontSize: "0.75rem" }}>
+                  River Current (<InlineMath math={"\\vec{v}_{2,3}"} />)
+                </span>
                 <span className="label-val" style={{ color: "var(--accent-cyan)", fontSize: "0.75rem" }}>{riverSpeed.toFixed(1)} m/s</span>
               </div>
               <input 
@@ -344,21 +390,33 @@ export default function AdditionSim() {
 
       {/* Explanatory Math Summary */}
       <div style={{ padding: "12px", backgroundColor: "var(--bg-input)", borderRadius: "8px", border: "1px solid var(--border-color)", textAlign: "left", fontSize: "0.82rem" }}>
-        <div style={{ fontWeight: 600, color: "var(--text-primary)", marginBottom: "4px" }}>
-          Vector Addition Calculation:
+        <div style={{ fontWeight: 600, color: "var(--text-primary)", marginBottom: "6px" }}>
+          Velocity Vector Addition Calculation:
         </div>
-        <div style={{ fontFamily: "var(--font-mono)", color: "var(--status-success)" }}>
+        <div style={{ color: "var(--status-success)" }}>
           {mode === "crossing" && (
-            <span>v1,3 = √({boatSpeed.toFixed(1)}² + {riverSpeed.toFixed(1)}²) = {vResultant.toFixed(2)} m/s (diagonally at {angleDeg.toFixed(0)}°)</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              <BlockMath math={`v_{1,3} = \\sqrt{v_{1,2}^2 + v_{2,3}^2} = \\sqrt{${boatSpeed.toFixed(1)}^2 + ${riverSpeed.toFixed(1)}^2} = ${vResultant.toFixed(2)}\\text{ m/s}`} />
+              <div style={{ color: "var(--text-muted)", fontSize: "0.78rem", textAlign: "center" }}>
+                Resultant direction: diagonally at {angleDeg.toFixed(0)}&deg; relative to North.
+              </div>
+            </div>
           )}
           {mode === "downstream" && (
-            <span>v1,3 = {boatSpeed.toFixed(1)} + {riverSpeed.toFixed(1)} = {vResultant.toFixed(1)} m/s (downstream)</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              <BlockMath math={`v_{1,3} = v_{1,2} + v_{2,3} = ${boatSpeed.toFixed(1)} + ${riverSpeed.toFixed(1)} = ${vResultant.toFixed(1)}\\text{ m/s}`} />
+              <div style={{ color: "var(--text-muted)", fontSize: "0.78rem", textAlign: "center" }}>
+                Resultant direction: downstream (parallel to current).
+              </div>
+            </div>
           )}
           {mode === "upstream" && (
-            <span>
-              v1,3 = |{boatSpeed.toFixed(1)} - {riverSpeed.toFixed(1)}| = {vResultant.toFixed(1)} m/s 
-              {boatSpeed >= riverSpeed ? " (slowly upstream)" : " (pushed downstream!)"}
-            </span>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              <BlockMath math={`v_{1,3} = |v_{1,2} - v_{2,3}| = |${boatSpeed.toFixed(1)} - ${riverSpeed.toFixed(1)}| = ${vResultant.toFixed(1)}\\text{ m/s}`} />
+              <div style={{ color: "var(--text-muted)", fontSize: "0.78rem", textAlign: "center" }}>
+                Resultant direction: {boatSpeed >= riverSpeed ? "upstream (boat moves forward)" : "downstream (boat pushed backward!)"}.
+              </div>
+            </div>
           )}
         </div>
       </div>

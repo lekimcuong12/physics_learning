@@ -21,6 +21,9 @@ import BikeTrip from "./components/InteractiveSimulations/BikeTrip";
 import SpeedSim from "./components/InteractiveSimulations/SpeedSim";
 import VelocitySim from "./components/InteractiveSimulations/VelocitySim";
 import AdditionSim from "./components/InteractiveSimulations/AdditionSim";
+import DisplacementTimeGraphSim from "./components/InteractiveSimulations/DisplacementTimeGraphSim";
+import { InlineMath, BlockMath } from "./components/SafeMath";
+import "katex/dist/katex.min.css";
 
 // Synthesized Audio Tones Player using Web Audio API
 const playSound = (type, isMuted) => {
@@ -67,36 +70,59 @@ const playSound = (type, isMuted) => {
   }
 };
 
-// Subscript/Vector Physics Text Formatter
-function PhysicsText({ text }) {
+// Subscript/Vector Physics Text Formatter using KaTeX
+export function PhysicsText({ text }) {
   if (!text) return null;
-  const html = text
-    .replace(/\$\?\\vec\{v\}\$/g, '<span class="math-vec">v</span>')
-    .replace(/\$\\vec\{v\}\$/g, '<span class="math-vec">v</span>')
-    .replace(/\\vec\{\\vec\{v\}\}/g, '<span class="math-vec">v</span>')
-    .replace(/\\vec\{v\}/g, '<span class="math-vec">v</span>')
-    .replace(/\\vec\{d\}/g, '<span class="math-vec">d</span>')
-    .replace(/\\Delta\\vec\{d\}/g, '&Delta;<span class="math-vec">d</span>')
-    .replace(/\\Delta t/g, '&Delta;t')
-    .replace(/\\Delta s/g, '&Delta;s')
-    .replace(/v1,3/g, 'v<sub>1,3</sub>')
-    .replace(/v1,2/g, 'v<sub>1,2</sub>')
-    .replace(/v2,3/g, 'v<sub>2,3</sub>')
-    .replace(/v_t/g, 'v<sub>t</sub>')
-    .replace(/v_avg/g, 'v<sub>avg</sub>')
-    .replace(/v21,2/g, 'v<sup>2</sup><sub>1,2</sub>')
-    .replace(/v22,3/g, 'v<sup>2</sup><sub>2,3</sub>');
-    
-  return <span dangerouslySetInnerHTML={{ __html: html }} />;
+
+  // Split text by $ to find inline LaTeX math
+  const parts = text.split("$");
+  
+  return (
+    <span className="notranslate" translate="no" style={{ display: "inline" }}>
+      {parts.map((part, index) => {
+        if (index % 2 === 1) {
+          // Inside $...$, render as KaTeX InlineMath
+          return <InlineMath key={index} math={part} />;
+        } else {
+          // Outside $...$, process standard variables and symbols
+          const tokenRegex = /(\\vec\{v\}|\\vec\{d\}|\\Delta\\vec\{d\}|\\Delta t|\\Delta s|v1,3|v1,2|v2,3|v_t|v_avg|v21,2|v22,3|\\vec\{d\}_1\s*\+\s*\\vec\{d\}_2|\\vec\{d\}_1|\\vec\{d\}_2|v_{1,3}|v_{1,2}|v_{2,3})/;
+          
+          const subParts = part.split(tokenRegex);
+          return (
+            <React.Fragment key={index}>
+              {subParts.map((subPart, subIndex) => {
+                if (tokenRegex.test(subPart)) {
+                  // Normalize token to LaTeX
+                  let mathExpr = subPart;
+                  if (mathExpr === "v1,3" || mathExpr === "v_1,3") mathExpr = "v_{1,3}";
+                  else if (mathExpr === "v1,2" || mathExpr === "v_1,2") mathExpr = "v_{1,2}";
+                  else if (mathExpr === "v2,3" || mathExpr === "v_2,3") mathExpr = "v_{2,3}";
+                  else if (mathExpr === "v_t" || mathExpr === "vt") mathExpr = "v_t";
+                  else if (mathExpr === "v_avg") mathExpr = "v_{\\text{avg}}";
+                  else if (mathExpr === "v21,2") mathExpr = "v_{1,2}^2";
+                  else if (mathExpr === "v22,3") mathExpr = "v_{2,3}^2";
+                  else if (mathExpr === "\\Delta\\vec{d}") mathExpr = "\\Delta \\vec{d}";
+                  
+                  return <InlineMath key={subIndex} math={mathExpr} />;
+                }
+                
+                return <span key={subIndex} dangerouslySetInnerHTML={{ __html: subPart }} />;
+              })}
+            </React.Fragment>
+          );
+        }
+      })}
+    </span>
+  );
 }
 
-// Math Equations Fraction Formatter
-function MathFormula({ formula }) {
+// Math Equations Fraction Formatter using KaTeX
+export function MathFormula({ formula }) {
   if (!formula) return null;
   
   if (formula.includes("\\text{LLM Query}")) {
     return (
-      <div className="formula-display" style={{ fontSize: "0.85rem", gap: "8px", flexWrap: "wrap", justifyContent: "center" }}>
+      <div className="formula-display notranslate" translate="no" style={{ fontSize: "0.85rem", gap: "8px", flexWrap: "wrap", justifyContent: "center" }}>
         <span style={{ padding: "4px 8px", background: "var(--accent-purple-glow)", border: "1px solid var(--accent-purple)", borderRadius: "4px", color: "var(--text-primary)" }}>LLM Query</span>
         <span style={{ color: "var(--accent-cyan)" }}>&rarr;</span>
         <span style={{ padding: "4px 8px", background: "var(--bg-secondary)", border: "1px solid var(--border-color)", borderRadius: "4px" }}>MCP Client</span>
@@ -110,7 +136,7 @@ function MathFormula({ formula }) {
 
   if (formula.includes("S_{\\text{total}}")) {
     return (
-      <div className="formula-display" style={{ fontSize: "0.95rem", flexDirection: "column", gap: "4px" }}>
+      <div className="formula-display notranslate" translate="no" style={{ fontSize: "0.95rem", flexDirection: "column", gap: "4px" }}>
         <div>S<sub>total</sub> = 0.4 &middot; S<sub>text</sub> + 0.2 &middot; S<sub>id</sub> + 0.2 &middot; S<sub>dom</sub> + 0.2 &middot; S<sub>visual</sub></div>
         <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "4px" }}>
           Weighted element similarity scoring system
@@ -119,7 +145,11 @@ function MathFormula({ formula }) {
     );
   }
 
-  return <div className="formula-display">{formula}</div>;
+  return (
+    <div className="formula-display notranslate" translate="no" style={{ background: "transparent", border: "none", boxShadow: "none", padding: 0 }}>
+      <BlockMath math={formula} />
+    </div>
+  );
 }
 
 // Decorative Rotating Vector Plane for Intro and Summary cover slides
@@ -154,7 +184,15 @@ function PhysicsDecorativeGrid() {
         <circle cx="200" cy="110" r="70" fill="none" stroke="var(--border-color)" strokeWidth="1" />
         <line x1="200" y1="110" x2={vx} y2={vy} stroke="var(--accent-cyan)" strokeWidth="3.5" markerEnd="url(#grid-arrow-d)" />
         <circle cx="200" cy="110" r="4" fill="var(--text-primary)" />
-        <text x={vx + 10} y={vy - 2} fill="var(--accent-cyan)" fontSize="10" fontWeight="bold" fontFamily="var(--font-mono)">d&#8407;</text>
+        <g>
+          <text x={vx + 10} y={vy - 2} fill="var(--accent-cyan)" fontSize="10" fontWeight="bold" fontFamily="var(--font-mono)">d</text>
+          <path 
+            d={`M ${vx + 10.5} ${vy - 11} L ${vx + 16.5} ${vy - 11} M ${vx + 14.5} ${vy - 12.5} L ${vx + 16.5} ${vy - 11} L ${vx + 14.5} ${vy - 9.5}`}
+            fill="none"
+            stroke="var(--accent-cyan)"
+            strokeWidth="1.2"
+          />
+        </g>
         <defs>
           <marker id="grid-arrow-d" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
             <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="var(--accent-cyan)" />
@@ -176,8 +214,9 @@ function App() {
   const activeSubject = "physics";
   // Page routing state
   const [viewState, setViewState] = useState("home"); // "home" or "lesson"
-  const [activeLessonId, setActiveLessonId] = useState("lesson-4");
+  const [activeLessonId, setActiveLessonId] = useState("lesson-1");
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [activeQuizIndex, setActiveQuizIndex] = useState(-1);
 
   // Course locking state
   const [completedLessons, setCompletedLessons] = useState(() => {
@@ -229,7 +268,9 @@ function App() {
   const handleCheckAnswer = () => {
     if (selectedOptionIndex === null || isAnswerChecked) return;
 
-    const correct = currentSlide.options[selectedOptionIndex].isCorrect;
+    const activeQuiz = (currentSlide.quizzes && activeQuizIndex >= 0) ? currentSlide.quizzes[activeQuizIndex] : null;
+    const correct = activeQuiz ? activeQuiz.options[selectedOptionIndex].isCorrect : currentSlide.options[selectedOptionIndex].isCorrect;
+
     setIsAnswerCorrect(correct);
     setIsAnswerChecked(true);
 
@@ -262,6 +303,33 @@ function App() {
   // Continue to next slide
   const handleNextSlide = () => {
     playSound("click", isMuted);
+
+    // Check if there are remaining quizzes in this slide
+    if (activeQuizIndex === -1 && currentSlide.quizzes && currentSlide.quizzes.length > 0) {
+      // Transition to first quiz
+      setActiveQuizIndex(0);
+      setSelectedOptionIndex(null);
+      setIsAnswerChecked(false);
+      setIsAnswerCorrect(false);
+      setShowIncorrectPrompt(false);
+      setIsExplanationRevealed(false);
+      return;
+    }
+
+    if (activeQuizIndex >= 0 && currentSlide.quizzes && activeQuizIndex + 1 < currentSlide.quizzes.length) {
+      // Transition to next quiz in same slide
+      setActiveQuizIndex(prev => prev + 1);
+      setSelectedOptionIndex(null);
+      setIsAnswerChecked(false);
+      setIsAnswerCorrect(false);
+      setShowIncorrectPrompt(false);
+      setIsExplanationRevealed(false);
+      return;
+    }
+
+    // Otherwise, we move to the next slide
+    // Reset active quiz index for next slide
+    setActiveQuizIndex(-1);
     
     // Check if it is the summary/last slide
     if (currentSlideIndex === activeLesson.slides.length - 1) {
@@ -292,8 +360,31 @@ function App() {
 
   const handlePrevSlide = () => {
     playSound("click", isMuted);
+
+    if (activeQuizIndex > 0) {
+      setActiveQuizIndex(prev => prev - 1);
+      setSelectedOptionIndex(null);
+      setIsAnswerChecked(false);
+      setIsAnswerCorrect(false);
+      setShowIncorrectPrompt(false);
+      setIsExplanationRevealed(false);
+      return;
+    }
+
+    if (activeQuizIndex === 0) {
+      setActiveQuizIndex(-1);
+      setSelectedOptionIndex(null);
+      setIsAnswerChecked(false);
+      setIsAnswerCorrect(false);
+      setShowIncorrectPrompt(false);
+      setIsExplanationRevealed(false);
+      return;
+    }
+
+    // If activeQuizIndex === -1, go to previous slide
     if (currentSlideIndex > 0) {
       setCurrentSlideIndex(prev => prev - 1);
+      setActiveQuizIndex(-1);
       setSelectedOptionIndex(null);
       setIsAnswerChecked(false);
       setIsAnswerCorrect(false);
@@ -309,6 +400,7 @@ function App() {
     playSound("click", isMuted);
     setActiveLessonId(lessonId);
     setCurrentSlideIndex(0);
+    setActiveQuizIndex(-1);
     setSelectedOptionIndex(null);
     setIsAnswerChecked(false);
     setIsAnswerCorrect(false);
@@ -337,13 +429,19 @@ function App() {
         return <VelocitySim />;
       case "addition":
         return <AdditionSim />;
+      case "graph-draw-sim":
+        return <DisplacementTimeGraphSim mode="draw" />;
+      case "robot-graph-sim":
+        return <DisplacementTimeGraphSim mode="robot" />;
+      case "slope-car-sim":
+        return <DisplacementTimeGraphSim mode="slope" />;
       default:
         return <PhysicsDecorativeGrid />;
     }
   };
 
   return (
-    <div className="app-container">
+    <div className="app-container notranslate" translate="no">
       
       {/* -------------------- VIEW 1: HOME PAGE DASHBOARD -------------------- */}
       {viewState === "home" && (
@@ -430,7 +528,7 @@ function App() {
                         justifyContent: "center"
                       }}
                     >
-                      {idx + 4}
+                      {idx + 1}
                     </div>
 
                     {/* Lesson text */}
@@ -439,7 +537,7 @@ function App() {
                         {lesson.title}
                       </h3>
                       <p style={{ fontSize: "0.92rem", color: "var(--text-secondary)" }}>
-                        {lesson.description}
+                        <PhysicsText text={lesson.description} />
                       </p>
                     </div>
 
@@ -497,7 +595,7 @@ function App() {
               <div className="tracker-hud">
                 <span>Card:</span>
                 <span className="hud-score">{currentSlideIndex + 1}/{activeLesson.slides.length}</span>
-                {currentSlide.type === "quiz" && (
+                {activeQuizIndex >= 0 && (
                   <>
                     <span style={{ margin: "0 4px", color: "var(--border-color)" }}>|</span>
                     <span>Quiz Score:</span>
@@ -529,8 +627,8 @@ function App() {
                 {/* badges */}
                 <span className="lesson-badge">
                   {currentSlide.type === "intro" && "Intro Card"}
-                  {currentSlide.type === "theory" && `Concept ${currentSlideIndex} of ${activeLesson.slides.length - 2}`}
-                  {currentSlide.type === "quiz" && "Interactive Challenge"}
+                  {currentSlide.type === "theory" && activeQuizIndex === -1 && `Concept ${currentSlideIndex} of ${activeLesson.slides.length - 2}`}
+                  {currentSlide.type === "theory" && activeQuizIndex >= 0 && `Interactive Quiz ${activeQuizIndex + 1} of ${currentSlide.quizzes?.length}`}
                   {currentSlide.type === "summary" && "Summary review"}
                 </span>
 
@@ -583,91 +681,6 @@ function App() {
                   </div>
                 )}
 
-                {/* View Quiz */}
-                {currentSlide.type === "quiz" && (
-                  <div>
-                    <p style={{ fontSize: "1.08rem", fontWeight: "500", marginBottom: "18px", color: "var(--text-primary)" }}>
-                      <PhysicsText text={currentSlide.question} />
-                    </p>
-
-                    <div className="quiz-options-list">
-                      {currentSlide.options.map((opt, idx) => {
-                        const letters = ["A", "B", "C", "D"];
-                        let optionClass = "quiz-option";
-
-                        if (selectedOptionIndex === idx) optionClass += " selected";
-                        
-                        if (isAnswerChecked) {
-                          optionClass += " checked";
-                          if (opt.isCorrect && (isAnswerCorrect || isExplanationRevealed)) {
-                            optionClass += " correct";
-                          } else if (selectedOptionIndex === idx && !isAnswerCorrect) {
-                            optionClass += " incorrect";
-                          }
-                        }
-
-                        return (
-                          <div 
-                            key={idx}
-                            className={optionClass}
-                            onClick={() => handleSelectOption(idx)}
-                          >
-                            <div className="quiz-option-letter">{letters[idx]}</div>
-                            <div className="option-text">
-                              <PhysicsText text={opt.text} />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {/* Quiz Wrong Option Prompt */}
-                    {showIncorrectPrompt && (
-                      <div className="explanation-card" style={{ border: "1px solid var(--status-error-border)", backgroundColor: "var(--status-error-bg)", margin: "16px 0 0 0" }}>
-                        <div className="explanation-header incorrect-label">
-                          <X size={18} /> <span>Incorrect Answer</span>
-                        </div>
-                        <p className="explanation-text" style={{ color: "var(--text-primary)", marginBottom: "12px" }}>
-                          Would you like to try again or reveal the correct explanation?
-                        </p>
-                        <div style={{ display: "flex", gap: "10px" }}>
-                          <button className="btn btn-secondary" style={{ padding: "6px 12px", fontSize: "0.8rem" }} onClick={handleRetryQuiz}>
-                            Try Again
-                          </button>
-                          <button 
-                            className="btn btn-primary" 
-                            style={{ padding: "6px 12px", fontSize: "0.8rem", background: "var(--status-error)" }}
-                            onClick={handleRevealQuizSolution}
-                          >
-                            Reveal Solution &amp; Explanation
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Explanation details (shown if correct OR revealed) */}
-                    {(isAnswerChecked && (!showIncorrectPrompt || isExplanationRevealed)) && (
-                      <div className="explanation-card">
-                        <div className={`explanation-header ${isAnswerCorrect ? "correct-label" : "incorrect-label"}`}>
-                          {isAnswerCorrect ? (
-                            <>
-                              <Check size={18} /> <span>Correct answer!</span>
-                            </>
-                          ) : (
-                            <>
-                              <X size={18} /> <span>Revealed Solution:</span>
-                            </>
-                          )}
-                        </div>
-                        <p className="explanation-text">
-                          <PhysicsText text={currentSlide.explanation} />
-                        </p>
-                      </div>
-                    )}
-
-                  </div>
-                )}
-
                 {/* View Summary */}
                 {currentSlide.type === "summary" && (
                   <div className="summary-container">
@@ -698,7 +711,7 @@ function App() {
                   <ChevronLeft size={16} /> Back
                 </button>
 
-                {currentSlide.type === "quiz" && !isAnswerChecked ? (
+                {activeQuizIndex >= 0 && !isAnswerChecked ? (
                   <button 
                     className="btn btn-success" 
                     onClick={handleCheckAnswer}
@@ -729,14 +742,111 @@ function App() {
                 pointerEvents: "none"
               }}></div>
               
-              {renderSimulator()}
+              {activeQuizIndex === -1 ? (
+                <>
+                  {renderSimulator()}
+                  {currentSlide.instruction && (
+                    <div style={{ marginTop: "16px", maxWidth: "420px", textAlign: "center", zIndex: 2 }}>
+                      <p className="simulator-instruction">
+                        <PhysicsText text={currentSlide.instruction} />
+                      </p>
+                    </div>
+                  )}
+                </>
+              ) : (
+                (() => {
+                  const activeQuiz = currentSlide.quizzes?.[activeQuizIndex];
+                  if (!activeQuiz) return null;
+                  return (
+                    <div className="simulator-container" style={{ width: "100%", maxWidth: "500px", zIndex: 2, animation: "slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards" }}>
+                      <div className="simulator-header">
+                        <span className="simulator-title" style={{ color: "var(--accent-purple)" }}>
+                          <Compass size={18} />
+                          {activeQuiz.title || `Concept Check`}
+                        </span>
+                      </div>
+                      
+                      <p style={{ fontSize: "1.05rem", fontWeight: "500", marginBottom: "18px", color: "var(--text-primary)", textAlign: "left" }}>
+                        <PhysicsText text={activeQuiz.question} />
+                      </p>
 
-              {currentSlide.instruction && (
-                <div style={{ marginTop: "16px", maxWidth: "420px", textAlign: "center", zIndex: 2 }}>
-                  <p className="simulator-instruction">
-                    <PhysicsText text={currentSlide.instruction} />
-                  </p>
-                </div>
+                      <div className="quiz-options-list">
+                        {activeQuiz.options.map((opt, idx) => {
+                          const letters = ["A", "B", "C", "D"];
+                          let optionClass = "quiz-option";
+
+                          if (selectedOptionIndex === idx) optionClass += " selected";
+                          
+                          if (isAnswerChecked) {
+                            optionClass += " checked";
+                            if (opt.isCorrect && (isAnswerCorrect || isExplanationRevealed)) {
+                              optionClass += " correct";
+                            } else if (selectedOptionIndex === idx && !isAnswerCorrect) {
+                              optionClass += " incorrect";
+                            }
+                          }
+
+                          return (
+                            <div 
+                              key={idx}
+                              className={optionClass}
+                              onClick={() => handleSelectOption(idx)}
+                            >
+                              <div className="quiz-option-letter">{letters[idx]}</div>
+                              <div className="option-text">
+                                <PhysicsText text={opt.text} />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Quiz Wrong Option Prompt */}
+                      {showIncorrectPrompt && (
+                        <div className="explanation-card" style={{ border: "1px solid var(--status-error-border)", backgroundColor: "var(--status-error-bg)", margin: "16px 0 0 0", textAlign: "left" }}>
+                          <div className="explanation-header incorrect-label">
+                            <X size={18} /> <span>Incorrect Answer</span>
+                          </div>
+                          <p className="explanation-text" style={{ color: "var(--text-primary)", marginBottom: "12px" }}>
+                            Would you like to try again or reveal the correct explanation?
+                          </p>
+                          <div style={{ display: "flex", gap: "10px" }}>
+                            <button className="btn btn-secondary" style={{ padding: "6px 12px", fontSize: "0.8rem" }} onClick={handleRetryQuiz}>
+                              Try Again
+                            </button>
+                            <button 
+                              className="btn btn-primary" 
+                              style={{ padding: "6px 12px", fontSize: "0.8rem", background: "var(--status-error)" }}
+                              onClick={handleRevealQuizSolution}
+                            >
+                              Reveal Solution
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Explanation details (shown if correct OR revealed) */}
+                      {(isAnswerChecked && (!showIncorrectPrompt || isExplanationRevealed)) && (
+                        <div className="explanation-card" style={{ textAlign: "left" }}>
+                          <div className={`explanation-header ${isAnswerCorrect ? "correct-label" : "incorrect-label"}`}>
+                            {isAnswerCorrect ? (
+                              <>
+                                <Check size={18} /> <span>Correct answer!</span>
+                              </>
+                            ) : (
+                              <>
+                                <X size={18} /> <span>Revealed Solution:</span>
+                              </>
+                            )}
+                          </div>
+                          <p className="explanation-text">
+                            <PhysicsText text={activeQuiz.explanation} />
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()
               )}
             </section>
 

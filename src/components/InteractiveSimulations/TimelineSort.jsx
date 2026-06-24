@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ListFilter, Calendar, Clock, ArrowRight, CheckCircle, AlertTriangle } from "lucide-react";
+import { ListFilter, Calendar, Clock, CheckCircle, AlertTriangle } from "lucide-react";
 
 export default function TimelineSort({ onComplete }) {
   // Phrases to sort
@@ -19,6 +19,7 @@ export default function TimelineSort({ onComplete }) {
   const [isChecked, setIsChecked] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [activeDropZone, setActiveDropZone] = useState(null); // 'point' | 'interval' | null
 
   // Click handler to select an unsorted item
   const handleSelectItem = (id) => {
@@ -26,7 +27,7 @@ export default function TimelineSort({ onComplete }) {
     setSelectedItemId(id === selectedItemId ? null : id);
   };
 
-  // Click handler to categorize selected item
+  // Click/drop handler to categorize item
   const handleCategorize = (category) => {
     if (selectedItemId === null || isChecked) return;
     
@@ -42,6 +43,65 @@ export default function TimelineSort({ onComplete }) {
     }));
     
     // Clear selection
+    setSelectedItemId(null);
+  };
+
+  // Drag and Drop Event Handlers
+  const handleDragStart = (e, id) => {
+    if (isChecked) {
+      e.preventDefault();
+      return;
+    }
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", id);
+    setSelectedItemId(id);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
+  const handleDragEnter = (e, category) => {
+    e.preventDefault();
+    if (isChecked) return;
+    setActiveDropZone(category);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    // Only reset if we are actually leaving the container, not entering its children
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setActiveDropZone(null);
+    }
+  };
+
+  const handleDrop = (e, category) => {
+    e.preventDefault();
+    setActiveDropZone(null);
+    if (isChecked) return;
+
+    // Retrieve via dataTransfer or fall back to state selectedItemId
+    const id = e.dataTransfer.getData("text/plain") || selectedItemId;
+    if (!id) return;
+
+    const itemToMove = unsorted.find(i => i.id === id);
+    if (!itemToMove) return;
+
+    // Remove from unsorted
+    setUnsorted(prev => prev.filter(i => i.id !== id));
+    // Add to target category
+    setCategorized(prev => ({
+      ...prev,
+      [category]: [...prev[category], itemToMove]
+    }));
+
+    // Clear selection
+    setSelectedItemId(null);
+  };
+
+  const handleDragEnd = () => {
+    setActiveDropZone(null);
     setSelectedItemId(null);
   };
 
@@ -80,6 +140,7 @@ export default function TimelineSort({ onComplete }) {
     setUnsorted(initialItems);
     setCategorized({ point: [], interval: [] });
     setSelectedItemId(null);
+    setActiveDropZone(null);
     setIsChecked(false);
     setIsCorrect(false);
     setShowExplanation(false);
@@ -106,7 +167,7 @@ export default function TimelineSort({ onComplete }) {
       {/* Instruction */}
       <div style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: "1.4" }}>
         {unsorted.length > 0 ? (
-          <span>Select a card from the <b>Unsorted</b> list, then click on either the <b>Point in Time</b> or <b>Time Interval</b> bin below.</span>
+          <span>Drag a phrase card and drop it into the correct bin below (or select and click to sort).</span>
         ) : (
           <span>All cards classified! Click <b>Check Classification</b> to verify your logic.</span>
         )}
@@ -120,7 +181,15 @@ export default function TimelineSort({ onComplete }) {
             <div 
               key={item.id}
               className={`quiz-option ${selectedItemId === item.id ? "selected" : ""}`}
-              style={{ padding: "10px 14px", borderStyle: "dashed", cursor: "pointer" }}
+              style={{ 
+                padding: "10px 14px", 
+                borderStyle: "dashed", 
+                cursor: isChecked ? "default" : "grab", 
+                opacity: selectedItemId === item.id ? 0.6 : 1 
+              }}
+              draggable={!isChecked}
+              onDragStart={(e) => handleDragStart(e, item.id)}
+              onDragEnd={handleDragEnd}
               onClick={() => handleSelectItem(item.id)}
             >
               <div className="quiz-option-letter" style={{ fontSize: "0.75rem", borderRadius: "4px", width: "22px", height: "22px" }}>?</div>
@@ -134,7 +203,7 @@ export default function TimelineSort({ onComplete }) {
         </div>
       )}
 
-      {/* Quick Category Placement Buttons (Helper for selection) */}
+      {/* Quick Category Placement Buttons (Fallback helper for selection) */}
       {selectedItemId !== null && (
         <div style={{ display: "flex", gap: "10px", width: "100%", justifyContent: "center" }}>
           <button 
@@ -160,9 +229,17 @@ export default function TimelineSort({ onComplete }) {
         {/* Bucket 1: Point in Time */}
         <div 
           onClick={() => handleCategorize("point")}
+          onDragOver={handleDragOver}
+          onDragEnter={(e) => handleDragEnter(e, "point")}
+          onDragLeave={handleDragLeave}
+          onDrop={(e) => handleDrop(e, "point")}
           style={{ 
-            backgroundColor: "var(--bg-input)", 
-            border: selectedItemId ? "2px dashed var(--accent-purple)" : "1px solid var(--border-color)", 
+            backgroundColor: activeDropZone === "point" ? "rgba(139, 92, 246, 0.08)" : "var(--bg-input)", 
+            border: activeDropZone === "point" 
+              ? "2px solid var(--accent-purple)" 
+              : selectedItemId 
+                ? "2px dashed var(--accent-purple)" 
+                : "1px solid var(--border-color)", 
             borderRadius: "10px", 
             padding: "12px", 
             minHeight: "130px",
@@ -170,14 +247,25 @@ export default function TimelineSort({ onComplete }) {
             flexDirection: "column",
             gap: "8px",
             cursor: selectedItemId ? "pointer" : "default",
-            transition: "all 0.2s ease"
+            transition: "all 0.2s ease",
+            boxShadow: activeDropZone === "point" ? "0 0 10px rgba(139, 92, 246, 0.3)" : "none"
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--accent-purple)", fontWeight: "600", fontSize: "0.85rem", borderBottom: "1px solid var(--border-color)", paddingBottom: "6px" }}>
+          <div style={{ 
+            pointerEvents: selectedItemId !== null ? "none" : "auto",
+            display: "flex", 
+            alignItems: "center", 
+            gap: "6px", 
+            color: "var(--accent-purple)", 
+            fontWeight: "600", 
+            fontSize: "0.85rem", 
+            borderBottom: "1px solid var(--border-color)", 
+            paddingBottom: "6px" 
+          }}>
             <Calendar size={14} /> Point in Time
           </div>
           {categorized.point.length === 0 ? (
-            <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", margin: "auto", fontStyle: "italic" }}>Empty Bin</span>
+            <span style={{ pointerEvents: selectedItemId !== null ? "none" : "auto", fontSize: "0.75rem", color: "var(--text-muted)", margin: "auto", fontStyle: "italic" }}>Empty Bin</span>
           ) : (
             categorized.point.map(item => {
               const isWrong = isChecked && item.correctCategory !== "point";
@@ -207,9 +295,17 @@ export default function TimelineSort({ onComplete }) {
         {/* Bucket 2: Time Interval */}
         <div 
           onClick={() => handleCategorize("interval")}
+          onDragOver={handleDragOver}
+          onDragEnter={(e) => handleDragEnter(e, "interval")}
+          onDragLeave={handleDragLeave}
+          onDrop={(e) => handleDrop(e, "interval")}
           style={{ 
-            backgroundColor: "var(--bg-input)", 
-            border: selectedItemId ? "2px dashed var(--accent-cyan)" : "1px solid var(--border-color)", 
+            backgroundColor: activeDropZone === "interval" ? "rgba(6, 182, 212, 0.08)" : "var(--bg-input)", 
+            border: activeDropZone === "interval" 
+              ? "2px solid var(--accent-cyan)" 
+              : selectedItemId 
+                ? "2px dashed var(--accent-cyan)" 
+                : "1px solid var(--border-color)", 
             borderRadius: "10px", 
             padding: "12px", 
             minHeight: "130px",
@@ -217,14 +313,25 @@ export default function TimelineSort({ onComplete }) {
             flexDirection: "column",
             gap: "8px",
             cursor: selectedItemId ? "pointer" : "default",
-            transition: "all 0.2s ease"
+            transition: "all 0.2s ease",
+            boxShadow: activeDropZone === "interval" ? "0 0 10px rgba(6, 182, 212, 0.3)" : "none"
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--accent-cyan)", fontWeight: "600", fontSize: "0.85rem", borderBottom: "1px solid var(--border-color)", paddingBottom: "6px" }}>
+          <div style={{ 
+            pointerEvents: selectedItemId !== null ? "none" : "auto",
+            display: "flex", 
+            alignItems: "center", 
+            gap: "6px", 
+            color: "var(--accent-cyan)", 
+            fontWeight: "600", 
+            fontSize: "0.85rem", 
+            borderBottom: "1px solid var(--border-color)", 
+            paddingBottom: "6px" 
+          }}>
             <Clock size={14} /> Time Interval
           </div>
           {categorized.interval.length === 0 ? (
-            <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", margin: "auto", fontStyle: "italic" }}>Empty Bin</span>
+            <span style={{ pointerEvents: selectedItemId !== null ? "none" : "auto", fontSize: "0.75rem", color: "var(--text-muted)", margin: "auto", fontStyle: "italic" }}>Empty Bin</span>
           ) : (
             categorized.interval.map(item => {
               const isWrong = isChecked && item.correctCategory !== "interval";

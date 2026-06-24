@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Play, RotateCcw, Compass } from "lucide-react";
+import { RotateCcw, Compass } from "lucide-react";
+import { InlineMath } from "../SafeMath";
 
 export default function SpeedSim() {
   const [speed, setSpeed] = useState(0); // Instantaneous speed (m/s)
@@ -93,8 +94,12 @@ export default function SpeedSim() {
       <div className="canvas-area">
         {/* HUD Stats */}
         <div className="canvas-hud">
-          <div className="hud-pill">Distance (s): {distance.toFixed(1)} m</div>
-          <div className="hud-pill">Time (t): {time.toFixed(1)} s</div>
+          <div className="hud-pill">
+            Distance (<InlineMath math="s" />): {distance.toFixed(1)} m
+          </div>
+          <div className="hud-pill">
+            Time (<InlineMath math="t" />): {time.toFixed(1)} s
+          </div>
         </div>
 
         {/* Physics Canvas (SVG representation of the road and car) */}
@@ -196,7 +201,9 @@ export default function SpeedSim() {
       {/* Speed Slider Control */}
       <div className="slider-control-group">
         <div className="control-label-row">
-          <span>Instantaneous Speed (v)</span>
+          <span>
+            Instantaneous Speed (<InlineMath math="v" />)
+          </span>
           <span className="label-val">{speed.toFixed(0)} m/s</span>
         </div>
         <input 
@@ -213,11 +220,15 @@ export default function SpeedSim() {
       {/* Physics Readouts */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginTop: "10px", fontSize: "0.85rem", fontFamily: "var(--font-mono)", textAlign: "left" }}>
         <div style={{ padding: "10px", backgroundColor: "var(--bg-input)", borderRadius: "8px", border: "1px solid var(--border-color)" }}>
-          <div style={{ color: "var(--text-muted)", marginBottom: "4px" }}>Instantaneous (v):</div>
+          <div style={{ color: "var(--text-muted)", marginBottom: "4px" }}>
+            Instantaneous (<InlineMath math="v" />):
+          </div>
           <div style={{ fontWeight: "bold", color: "var(--accent-cyan)", fontSize: "1.05rem" }}>{speed.toFixed(1)} m/s</div>
         </div>
         <div style={{ padding: "10px", backgroundColor: "var(--bg-input)", borderRadius: "8px", border: "1px solid var(--border-color)" }}>
-          <div style={{ color: "var(--text-muted)", marginBottom: "4px" }}>Average Speed (v_avg):</div>
+          <div style={{ color: "var(--text-muted)", marginBottom: "4px" }}>
+            Average Speed (<InlineMath math="v_{\text{avg}}" />):
+          </div>
           <div style={{ fontWeight: "bold", color: "var(--accent-purple)", fontSize: "1.05rem" }}>{averageSpeed.toFixed(1)} m/s</div>
         </div>
       </div>

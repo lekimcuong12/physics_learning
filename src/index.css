@@ -641,6 +641,10 @@ code {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   backdrop-filter: blur(4px);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
 }
 
 /* Quiz Interface */
