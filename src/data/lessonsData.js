@@ -149,7 +149,7 @@ export const courseLessons = [
       {
         id: "compare-theory",
         type: "theory",
-        title: "3. Comparing Distance ($s$) vs. Displacement ($\\vec{d}$)",
+        title: "3. Comparing Distance (s) vs. Displacement (d)",
         concept: "Distance ($s$) and Displacement ($\\vec{d}$) behave differently depending on whether the object changes its direction of motion. We can also combine multiple displacements using vector addition: $\\vec{d} = \\vec{d}_1 + \\vec{d}_2$.",
         sections: [
           {
@@ -323,7 +323,7 @@ export const courseLessons = [
             details: "Where: $d$ (or $\\vec{d}$) is the displacement vector (starting point to ending point)."
           },
           {
-            subtitle: "Characteristics of the Velocity Vector ($\\vec{v}$)",
+            subtitle: "Characteristics of the Velocity Vector (v)",
             content: "We represent velocity as an arrow (vector) with three key properties:",
             bullets: [
               "Origin: Fixed on the moving object itself.",
@@ -484,16 +484,16 @@ export const courseLessons = [
     id: "lesson-3",
     subject: "physics",
     title: "Lesson 3: Displacement-Time Graph",
-    description: "Learn how to plot $d$-$t$ graphs, interpret motion intervals, and determine velocity from graph slope.",
+    description: "Learn how to plot d-t graphs, interpret motion intervals, and determine velocity from graph slope.",
     slides: [
       {
         id: "intro-3",
         type: "intro",
         title: "Lesson 3: Displacement-Time Graph",
         subtitle: "How can we visually represent motion?",
-        introText: "A displacement-time ($d$-$t$) graph is a powerful tool in physics that visually represents an object's entire journey over time, enabling us to quickly determine its position, duration, direction, and velocity.",
+        introText: "A displacement-time (d-t) graph is a powerful tool in physics that visually represents an object's entire journey over time, enabling us to quickly determine its position, duration, direction, and velocity.",
         bullets: [
-          "Learn how to construct a displacement-time ($d$-$t$) graph from experimental data.",
+          "Learn how to construct a displacement-time (d-t) graph from experimental data.",
           "Interpret the shape of the graph to determine state of motion (uniform positive motion, resting, or uniform negative motion).",
           "Calculate velocity directly from the slope of the plotted path."
         ]
@@ -501,36 +501,60 @@ export const courseLessons = [
       {
         id: "graph-plotting-theory",
         type: "theory",
-        title: "1. Drawing a Displacement-Time Graph ($d$-$t$)",
-        concept: "A displacement-time ($d$-$t$) graph shows how displacement $d$ varies with time $t$. Displacement $d$ is plotted on the vertical axis and time $t$ is plotted on the horizontal axis.",
+        title: "1. Drawing a Displacement-Time Graph (d-t)",
+        concept: "A displacement-time (d-t) graph shows how displacement d varies with time t. Displacement d is plotted on the vertical axis and time t is plotted on the horizontal axis.",
         sections: [
           {
             subtitle: "Coordinate System",
-            content: "Vertical Axis ($y$-axis): Represents displacement $d$ (meters, kilometers, etc.).\nHorizontal Axis ($x$-axis): Represents time $t$ (seconds, hours, etc.)."
+            content: "Vertical Axis (y-axis): Represents displacement d (meters, kilometers, etc.).\nHorizontal Axis (x-axis): Represents time t (seconds, hours, etc.)."
           },
           {
             subtitle: "Plotting Procedure",
-            content: "1. Identify the coordinate pairs ($t, d$) from the collected data table.\n2. Plot these coordinates as points on the coordinate plane.\n3. Connect consecutive points with straight line segments."
+            content: "1. Identify the coordinate pairs (t, d) from the collected data table.\n2. Plot these coordinates as points on the coordinate plane.\n3. Connect consecutive points with straight line segments."
           },
           {
             subtitle: "Practical Example",
-            content: "Consider the motion data of student A walking along a straight path:\n- Displacement $d\\text{ (m)}$: $0$, $200$, $400$, $600$, $800$, $1000$, $800$\n- Time $t\\text{ (s)}$: $0$, $50$, $100$, $150$, $200$, $250$, $300$"
+            content: "Consider the motion data of Student A walking along a straight path:\n- Displacement d (m): 0, 200, 400, 600, 800, 1000, 800\n- Time t (s): 0, 50, 100, 150, 200, 250, 300"
           }
         ],
         simulationId: "graph-draw-sim",
-        instruction: "Observe the data table above and inspect the 4 graphs in the simulator panel on the right. A correct graph must plot $d$ on the vertical axis and $t$ on the horizontal axis with accurate coordinates. Click each graph to inspect it!",
+        instruction: "Observe the data table above and inspect the 4 graphs in the simulator panel on the right. A correct graph must plot d on the vertical axis and t on the horizontal axis with accurate coordinates. Click each graph to inspect it!",
         quizzes: [
           {
             id: "graph-draw-quiz",
             title: "Concept Check: Identifying d-t Graphs",
-            question: "Using Student A's motion data (displacement reaches a peak of $1000\\text{ m}$ at $t = 250\\text{ s}$, then drops to $800\\text{ m}$ at $t = 300\\text{ s}$), why is Graph B the correct representation while Graph A is incorrect?",
+            question: "Using Student A's motion data (displacement reaches a peak of 1000 m at t = 250 s, then drops to 800 m at t = 300 s), why is Graph B the correct representation while Graph A is incorrect?",
             options: [
-              { text: "Graph A is incorrect because the vertical axis represents time $t$ and the horizontal axis represents displacement $d$ (axes are swapped).", isCorrect: true },
+              { text: "Graph A is incorrect because the vertical axis represents time t and the horizontal axis represents displacement d (axes are swapped).", isCorrect: true },
               { text: "Graph B is incorrect because its slope is too steep during the initial interval.", isCorrect: false },
-              { text: "Graph A is correct because time $t$ should always be placed on the vertical axis for easier viewing.", isCorrect: false },
+              { text: "Graph A is correct because time t should always be placed on the vertical axis for easier viewing.", isCorrect: false },
               { text: "All four graphs are correct representations of Student A's motion.", isCorrect: false }
             ],
-            explanation: "The conventions for drawing a $d$-$t$ graph require: the vertical axis ($y$-axis) must represent displacement $d$, and the horizontal axis ($x$-axis) must represent time $t$. Graph A has swapped the axes, making it physically incorrect. Graph B plots the correct axes and represents the data points accurately."
+            explanation: "The conventions for drawing a d-t graph require: the vertical axis (y-axis) must represent displacement d, and the horizontal axis (x-axis) must represent time t. Graph A has swapped the axes, making it physically incorrect. Graph B plots the correct axes and represents the data points accurately."
+          },
+          {
+            id: "graph-axes-quiz",
+            title: "Question 2 (Theory)",
+            question: "On a displacement-time (d-t) coordinate system, which physical quantities do the vertical and horizontal axes represent, respectively?",
+            options: [
+              { text: "The vertical axis represents time t, and the horizontal axis represents displacement d.", isCorrect: false },
+              { text: "The vertical axis represents velocity v, and the horizontal axis represents time t.", isCorrect: false },
+              { text: "The vertical axis represents displacement d, and the horizontal axis represents time t.", isCorrect: true },
+              { text: "The vertical axis represents distance s, and the horizontal axis represents speed v.", isCorrect: false }
+            ],
+            explanation: "According to the physics convention for drawing a displacement-time (d-t) graph, the vertical axis (y-axis) represents the displacement d of the moving object, while the horizontal axis (x-axis) represents the elapsed time t."
+          },
+          {
+            id: "graph-table-read-quiz",
+            title: "Question 3 (Data Interpretation)",
+            question: "Based on the motion data table for Student A, what is the displacement of the student at the time t = 150 s?<br/><br/><table style=\"width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.9rem; border: 1px solid var(--border-color); text-align: center;\"><thead><tr style=\"border-bottom: 2px solid var(--border-color); background-color: var(--bg-secondary);\"><th style=\"padding: 6px; border: 1px solid var(--border-color);\">Time t (s)</th><th style=\"padding: 6px; border: 1px solid var(--border-color);\">0</th><th style=\"padding: 6px; border: 1px solid var(--border-color);\">50</th><th style=\"padding: 6px; border: 1px solid var(--border-color);\">100</th><th style=\"padding: 6px; border: 1px solid var(--border-color);\">150</th><th style=\"padding: 6px; border: 1px solid var(--border-color);\">200</th><th style=\"padding: 6px; border: 1px solid var(--border-color);\">250</th><th style=\"padding: 6px; border: 1px solid var(--border-color);\">300</th></tr></thead><tbody><tr><td style=\"padding: 6px; font-weight: bold; border: 1px solid var(--border-color);\">Displacement d (m)</td><td style=\"padding: 6px; border: 1px solid var(--border-color);\">0</td><td style=\"padding: 6px; border: 1px solid var(--border-color);\">200</td><td style=\"padding: 6px; border: 1px solid var(--border-color);\">400</td><td style=\"padding: 6px; border: 1px solid var(--border-color);\">600</td><td style=\"padding: 6px; border: 1px solid var(--border-color);\">800</td><td style=\"padding: 6px; border: 1px solid var(--border-color);\">1000</td><td style=\"padding: 6px; border: 1px solid var(--border-color);\">800</td></tr></tbody></table>",
+            options: [
+              { text: "400 m", isCorrect: false },
+              { text: "600 m", isCorrect: true },
+              { text: "800 m", isCorrect: false },
+              { text: "1000 m", isCorrect: false }
+            ],
+            explanation: "By checking the rows/columns of the motion data table under the column representing time t = 150 s, the corresponding displacement of the student is exactly 600 m."
           }
         ]
       },
@@ -538,35 +562,59 @@ export const courseLessons = [
         id: "graph-motion-types",
         type: "theory",
         title: "2. Using d-t Graphs in Straight-Line Motion",
-        concept: "The shape of the line on a $d$-$t$ graph allows us to quickly determine the nature and direction of an object's motion without complex calculations.",
+        concept: "The shape of the line on a d-t graph allows us to quickly determine the nature and direction of an object's motion without complex calculations.",
         sections: [
           {
-            subtitle: "Horizontal Line (parallel to $Ot$)",
-            content: "Displacement $d$ does not change over time. Meaning: The object is stationary (at rest, $v = 0$)."
+            subtitle: "Horizontal Line (parallel to Ot)",
+            content: "Displacement d does not change over time. Meaning: The object is stationary (at rest, v = 0)."
           },
           {
             subtitle: "Upward Slanting Line (positive slope)",
-            content: "The object moves away from the origin in the positive direction. Meaning: The object moves in uniform straight motion in the positive direction ($v > 0$)."
+            content: "The object moves away from the origin in the positive direction. Meaning: The object moves in uniform straight motion in the positive direction (v > 0)."
           },
           {
             subtitle: "Downward Slanting Line (negative slope)",
-            content: "The object moves back toward the origin. Meaning: The object moves in uniform straight motion in the negative direction ($v < 0$)."
+            content: "The object moves back toward the origin. Meaning: The object moves in uniform straight motion in the negative direction (v < 0)."
           }
         ],
         simulationId: "robot-graph-sim",
-        instruction: "Observe the 15-second journey of the toy robot on the right. Click directly on points ($A, B, C, D$) or segments ($AB, BC, CD$) on the graph to analyze the motion state, velocity, and direction.",
+        instruction: "Observe the 15-second journey of the toy robot on the right. Click directly on points (A, B, C, D) or segments (AB, BC, CD) on the graph to analyze the motion state, velocity, and direction.",
         quizzes: [
           {
             id: "robot-motion-quiz",
             title: "Concept Check: Robot Journey Analysis",
-            question: "In the toy robot's $d$-$t$ graph: Segment $BC$ (from $5\\text{ s}$ to $10\\text{ s}$) is a horizontal line parallel to the time axis $Ot$. What is the physical state of the robot during this interval?",
+            question: "In the toy robot's d-t graph: Segment BC (from 5 s to 10 s) is a horizontal line parallel to the time axis Ot. What is the physical state of the robot during this interval?",
             options: [
               { text: "The robot moves in uniform straight motion in the positive direction.", isCorrect: false },
               { text: "The robot is stationary (at rest), holding its position constant.", isCorrect: true },
               { text: "The robot is accelerating back toward the start.", isCorrect: false },
               { text: "The robot moves in uniform straight motion in the negative direction.", isCorrect: false }
             ],
-            explanation: "A horizontal segment on a $d$-$t$ graph indicates that displacement $d$ remains constant (fixed at $10\\text{ m}$). Therefore, the robot is stationary (at rest)."
+            explanation: "A horizontal segment on a d-t graph indicates that displacement d remains constant (fixed at 10 m). Therefore, the robot is stationary (at rest)."
+          },
+          {
+            id: "graph-horizontal-quiz",
+            title: "Question 2 (Graph Recognition)",
+            question: "On a displacement-time (d-t) graph, what does a flat horizontal line segment parallel to the time axis indicate?<br/><br/><div style=\"text-align: center; margin: 12px 0;\"><svg width=\"200\" height=\"120\" style=\"background-color: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border-color);\"><line x1=\"30\" y1=\"10\" x2=\"30\" y2=\"100\" stroke=\"var(--text-primary)\" stroke-width=\"1.5\" /><line x1=\"30\" y1=\"100\" x2=\"190\" y2=\"100\" stroke=\"var(--text-primary)\" stroke-width=\"1.5\" /><text x=\"22\" y=\"15\" fill=\"var(--text-primary)\" font-size=\"10\" font-family=\"var(--font-mono)\">d</text><text x=\"180\" y=\"112\" fill=\"var(--text-primary)\" font-size=\"10\" font-family=\"var(--font-mono)\">t</text><text x=\"20\" y=\"108\" fill=\"var(--text-muted)\" font-size=\"9\" font-family=\"var(--font-mono)\">O</text><line x1=\"30\" y1=\"50\" x2=\"160\" y2=\"50\" stroke=\"var(--accent-purple)\" stroke-width=\"2\" /><circle cx=\"160\" cy=\"50\" r=\"3.5\" fill=\"var(--accent-purple)\" /><text x=\"14\" y=\"54\" fill=\"var(--text-secondary)\" font-size=\"9\" font-family=\"var(--font-mono)\">d₀</text></svg></div>",
+            options: [
+              { text: "The object is moving in a uniform straight line.", isCorrect: false },
+              { text: "The object is accelerating at a constant rate.", isCorrect: false },
+              { text: "The object is reversing its direction of motion.", isCorrect: false },
+              { text: "The object is stationary (at rest).", isCorrect: true }
+            ],
+            explanation: "A horizontal segment parallel to the time axis (Ot) indicates that the object's displacement d does not change over time. Therefore, its position remains constant, meaning the object is stationary (v = 0)."
+          },
+          {
+            id: "graph-negative-slope-quiz",
+            title: "Question 3 (Physical Significance)",
+            question: "What does a downward-sloping straight line segment (negative slope) on a displacement-time (d-t) graph represent?<br/><br/><div style=\"text-align: center; margin: 12px 0;\"><svg width=\"200\" height=\"120\" style=\"background-color: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border-color);\"><line x1=\"30\" y1=\"10\" x2=\"30\" y2=\"100\" stroke=\"var(--text-primary)\" stroke-width=\"1.5\" /><line x1=\"30\" y1=\"100\" x2=\"190\" y2=\"100\" stroke=\"var(--text-primary)\" stroke-width=\"1.5\" /><text x=\"22\" y=\"15\" fill=\"var(--text-primary)\" font-size=\"10\" font-family=\"var(--font-mono)\">d</text><text x=\"180\" y=\"112\" fill=\"var(--text-primary)\" font-size=\"10\" font-family=\"var(--font-mono)\">t</text><text x=\"20\" y=\"108\" fill=\"var(--text-muted)\" font-size=\"9\" font-family=\"var(--font-mono)\">O</text><line x1=\"45\" y1=\"30\" x2=\"165\" y2=\"85\" stroke=\"var(--status-error)\" stroke-width=\"2\" /><circle cx=\"45\" cy=\"30\" r=\"3\" fill=\"var(--status-error)\" /><circle cx=\"165\" cy=\"85\" r=\"3\" fill=\"var(--status-error)\" /><line x1=\"45\" y1=\"30\" x2=\"30\" y2=\"30\" stroke=\"var(--text-muted)\" stroke-dasharray=\"2,2\" /><line x1=\"45\" y1=\"30\" x2=\"45\" y2=\"100\" stroke=\"var(--text-muted)\" stroke-dasharray=\"2,2\" /><line x1=\"165\" y1=\"85\" x2=\"30\" y2=\"85\" stroke=\"var(--text-muted)\" stroke-dasharray=\"2,2\" /><line x1=\"165\" y1=\"85\" x2=\"165\" y2=\"100\" stroke=\"var(--text-muted)\" stroke-dasharray=\"2,2\" /><text x=\"15\" y=\"34\" fill=\"var(--text-secondary)\" font-size=\"8\" font-family=\"var(--font-mono)\">d₁</text><text x=\"15\" y=\"89\" fill=\"var(--text-secondary)\" font-size=\"8\" font-family=\"var(--font-mono)\">d₂</text><text x=\"41\" y=\"112\" fill=\"var(--text-secondary)\" font-size=\"8\" font-family=\"var(--font-mono)\">t₁</text><text x=\"161\" y=\"112\" fill=\"var(--text-secondary)\" font-size=\"8\" font-family=\"var(--font-mono)\">t₂</text></svg></div>",
+            options: [
+              { text: "The object is decelerating uniformly.", isCorrect: false },
+              { text: "The object is in uniform straight motion in the negative direction (moving in reverse).", isCorrect: true },
+              { text: "The object is physically traveling down a hill.", isCorrect: false },
+              { text: "The velocity of the object is zero.", isCorrect: false }
+            ],
+            explanation: "A downward slant represents a negative slope coefficient. In a d-t graph, the slope represents velocity, so a negative slope indicates a constant negative velocity (v < 0), meaning the object is moving back toward the origin in the negative direction."
           }
         ]
       },
@@ -574,15 +622,16 @@ export const courseLessons = [
         id: "slope-velocity-theory",
         type: "theory",
         title: "3. Determining Velocity from a d-t Graph",
-        concept: "The velocity of an object is equal to the slope (slope coefficient) of the line representing its motion on a $d$-$t$ graph.",
+        concept: "The velocity of an object is equal to the slope (slope coefficient) of the line representing its motion on a d-t graph.",
         sections: [
           {
             subtitle: "Slope Formula",
-            content: "Velocity $v = \\text{Slope} = \\frac{\\Delta d}{\\Delta t} = \\frac{d_2 - d_1}{t_2 - t_1}$"
+            content: "Velocity is the slope (gradient) of the displacement-time graph line:",
+            formula: "v = \\text{Slope} = \\frac{\\Delta d}{\\Delta t} = \\frac{d_2 - d_1}{t_2 - t_1}"
           },
           {
             subtitle: "Direction & Sign of Velocity",
-            content: "- Upward slope &rarr; Positive slope &rarr; $v > 0$: Object moves in the positive direction.\n- Downward slope &rarr; Negative slope &rarr; $v < 0$: Object moves in the negative direction.\n- Horizontal line &rarr; Zero slope &rarr; $v = 0$: Object is stationary."
+            content: "- Upward slope &rarr; Positive slope &rarr; v > 0: Object moves in the positive direction.\n- Downward slope &rarr; Negative slope &rarr; v < 0: Object moves in the negative direction.\n- Horizontal line &rarr; Zero slope &rarr; v = 0: Object is stationary."
           },
           {
             subtitle: "Slope Steepness and Speed",
@@ -590,19 +639,43 @@ export const courseLessons = [
           }
         ],
         simulationId: "slope-car-sim",
-        instruction: "Use the slider in the simulator panel on the right to adjust the slope of the $d$-$t$ graph. Observe how the model car above moves in response to the slope (steeper: faster forward, flat: stops, negative: moves in reverse).",
+        instruction: "Use the slider in the simulator panel on the right to adjust the slope of the d-t graph. Observe how the model car above moves in response to the slope (steeper: faster forward, flat: stops, negative: moves in reverse).",
         quizzes: [
           {
             id: "slope-velocity-quiz",
             title: "Concept Check: Calculating Velocity from Slope",
-            question: "An object moving in a straight line has a downward-sloping $d$-$t$ graph. At $t_1 = 2\\text{ s}$, the object is at displacement $d_1 = 8\\text{ m}$. At $t_2 = 4\\text{ s}$, the object is at $d_2 = 2\\text{ m}$. What is the velocity of the object?",
+            question: "An object moving in a straight line has a downward-sloping d-t graph. At t₁ = 2 s, the object is at displacement d₁ = 8 m. At t₂ = 4 s, the object is at d₂ = 2 m. What is the velocity of the object?",
             options: [
-              { text: "$v = 3\\text{ m/s}$", isCorrect: false },
-              { text: "$v = -3\\text{ m/s}$", isCorrect: true },
-              { text: "$v = -2\\text{ m/s}$", isCorrect: false },
-              { text: "$v = 1.5\\text{ m/s}$", isCorrect: false }
+              { text: "v = 3 m/s", isCorrect: false },
+              { text: "v = -3 m/s", isCorrect: true },
+              { text: "v = -2 m/s", isCorrect: false },
+              { text: "v = 1.5 m/s", isCorrect: false }
             ],
-            explanation: "Apply the velocity slope formula: $v = \\frac{d_2 - d_1}{t_2 - t_1} = \\frac{2 - 8}{4 - 2} = \\frac{-6}{2} = -3\\text{ m/s}$. The negative sign indicates that the object is traveling in the negative direction."
+            explanation: "Apply the velocity slope formula: v = (d₂ - d₁) / (t₂ - t₁) = (2 - 8) / (4 - 2) = -6 / 2 = -3 m/s. The negative sign indicates that the object is traveling in the negative direction."
+          },
+          {
+            id: "slope-core-theory-quiz",
+            title: "Question 2 (Core Theory)",
+            question: "Which graphical feature of a displacement-time (d-t) graph represents the velocity of an object in uniform straight motion?<br/><br/><div style=\"text-align: center; margin: 12px 0;\"><svg width=\"200\" height=\"120\" style=\"background-color: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border-color);\"><line x1=\"30\" y1=\"10\" x2=\"30\" y2=\"100\" stroke=\"var(--text-primary)\" stroke-width=\"1.5\" /><line x1=\"30\" y1=\"100\" x2=\"190\" y2=\"100\" stroke=\"var(--text-primary)\" stroke-width=\"1.5\" /><text x=\"22\" y=\"15\" fill=\"var(--text-primary)\" font-size=\"10\" font-family=\"var(--font-mono)\">d</text><text x=\"180\" y=\"112\" fill=\"var(--text-primary)\" font-size=\"10\" font-family=\"var(--font-mono)\">t</text><text x=\"20\" y=\"108\" fill=\"var(--text-muted)\" font-size=\"9\" font-family=\"var(--font-mono)\">O</text><line x1=\"40\" y1=\"80\" x2=\"160\" y2=\"30\" stroke=\"var(--accent-cyan)\" stroke-width=\"2\" /><line x1=\"90\" y1=\"59\" x2=\"140\" y2=\"59\" stroke=\"var(--status-warning)\" stroke-width=\"1\" stroke-dasharray=\"3,3\" /><line x1=\"140\" y1=\"59\" x2=\"140\" y2=\"38\" stroke=\"var(--status-warning)\" stroke-width=\"1\" stroke-dasharray=\"3,3\" /><text x=\"110\" y=\"70\" fill=\"var(--status-warning)\" font-size=\"8\" font-family=\"var(--font-mono)\">Δt</text><text x=\"145\" y=\"52\" fill=\"var(--status-warning)\" font-size=\"8\" font-family=\"var(--font-mono)\">Δd</text></svg></div>",
+            options: [
+              { text: "The total length of the plotted graph line.", isCorrect: false },
+              { text: "The area bounded under the graph line.", isCorrect: false },
+              { text: "The coordinates of the final position point.", isCorrect: false },
+              { text: "The slope (gradient) of the graph line.", isCorrect: true }
+            ],
+            explanation: "Velocity is defined as the rate of change of displacement over time: v = Δd/Δt. On a d-t graph, this ratio corresponds exactly to the slope (gradient) of the line representing the object's motion."
+          },
+          {
+            id: "slope-calculation-quiz",
+            title: "Question 3 (Calculation Practice)",
+            question: "Based on the student's motion data table, between t₁ = 250 s and t₂ = 300 s, the displacement decreases from d₁ = 1000 m to d₂ = 800 m. What is the velocity of the student during this interval?<br/><br/><table style=\"width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.9rem; border: 1px solid var(--border-color); text-align: center;\"><thead><tr style=\"border-bottom: 2px solid var(--border-color); background-color: var(--bg-secondary);\"><th style=\"padding: 6px; border: 1px solid var(--border-color);\">Time t (s)</th><th style=\"padding: 6px; border: 1px solid var(--border-color);\">250</th><th style=\"padding: 6px; border: 1px solid var(--border-color);\">300</th></tr></thead><tbody><tr><td style=\"padding: 6px; font-weight: bold; border: 1px solid var(--border-color);\">Displacement d (m)</td><td style=\"padding: 6px; border: 1px solid var(--border-color);\">1000</td><td style=\"padding: 6px; border: 1px solid var(--border-color);\">800</td></tr></tbody></table>",
+            options: [
+              { text: "v = 4 m/s", isCorrect: false },
+              { text: "v = -4 m/s", isCorrect: true },
+              { text: "v = 200 m/s", isCorrect: false },
+              { text: "v = -200 m/s", isCorrect: false }
+            ],
+            explanation: "Using the velocity slope formula: v = Δd/Δt = (d₂ - d₁) / (t₂ - t₁) = (800 m - 1000 m) / (300 s - 250 s) = -200 m / 50 s = -4 m/s. The negative sign indicates the student is traveling in the direction opposite to the designated positive axis."
           }
         ]
       },
@@ -613,10 +686,10 @@ export const courseLessons = [
         subtitle: "Great job! You have mastered displacement-time graphs.",
         summaryText: "Key takeaways to remember:",
         bullets: [
-          "The vertical axis represents displacement $d$, and the horizontal axis represents time $t$.",
+          "The vertical axis represents displacement d, and the horizontal axis represents time t.",
           "Graph line shape details: Slanting up &rarr; moving forward; Horizontal &rarr; stationary; Slanting down &rarr; moving in reverse.",
-          "Velocity equals the slope of the line: $v = \\frac{\\Delta d}{\\Delta t}$. A steeper slope indicates a greater speed.",
-          "A $d$-$t$ graph is a visual summary of an object's position and instantaneous velocity over time."
+          "Velocity equals the slope of the line: v = Δd/Δt. A steeper slope indicates a greater speed.",
+          "A d-t graph is a visual summary of an object's position and instantaneous velocity over time."
         ]
       }
     ]
